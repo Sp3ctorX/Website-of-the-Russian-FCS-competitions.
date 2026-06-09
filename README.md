@@ -1,1 +1,113 @@
 # Website-of-the-Russian-FCS-competitions.
+Студенческая лига — система управления соревнованиями
+Веб-приложение для организации и проведения соревнований среди студентов в сфере IT, киберспорта и технологического творчества. Поддерживает многоролевую модель: администраторы, менеджеры направлений, эксперты, участники и главные эксперты.
+
+ Возможности
+Управление направлениями (киберспорт, гонки дронов, спортивное программирование, фиджитал)
+Создание соревнований с привязкой к направлениям
+Назначение менеджеров на направления
+Управление экспертами:
+подача заявки на статус эксперта
+одобрение/отклонение заявок менеджером
+назначение экспертов на конкретные соревнования
+Работа с заданиями и оценка участников
+Ролевой доступ на основе JWT-токенов
+
+👥 Роли пользователей
+Роль	Права
+admin	Полный доступ: управление пользователями, направлениями, соревнованиями, назначение менеджеров
+manager	Управление своим направлением: создание соревнований, одобрение экспертов, назначение экспертов на соревнования
+chief_expert	Управление заданиями и экспертами в рамках соревнования
+expert	Выставление оценок участникам, просмотр назначенных соревнований
+participant	Участие в соревнованиях, подача заявок на статус эксперта
+
+Технологии
+Backend: FastAPI (Python)
+Database: SQLite (SQLAlchemy ORM)
+Auth: JWT (python-jose)
+Password hashing: bcrypt (passlib)
+Templates: Jinja2
+
+Установка и запуск:
+
+Требования
+Python 3.9+
+Установленный pip
+
+Шаги
+
+1 Клонировать репозиторий
+
+git clone https://github.com/yourname/student-league](https://github.com/Sp3ctorX/Website-of-the-Russian-FCS-competitions.git
+cd student-league
+
+2 Создать виртуальное окружение
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+
+3 Установить зависимости
+pip install -r requirements.txt
+
+4 Инициализировать базу данных
+python init_db.py
+Будет создана база данных с администратором:
+admin / admin123
+
+5 Запустить сервер
+python start_server.py
+
+Сервер запустится на http://localhost:8888
+
+Либо вручную:
+uvicorn app.main:app --host 0.0.0.0 --port 8888 --reload
+
+
+
+Основные API эндпоинты
+Все API возвращают JSON. Для защищённых эндпоинтов требуется заголовок:
+
+Authorization: Bearer <access_token>
+Аутентификация
+POST /api/auth/login — вход (username + password)
+
+Администратор (/api/admin)
+GET /users — список пользователей
+
+POST /users — создание пользователя
+
+GET /directions — список направлений
+
+POST /directions/{id}/manager/{user_id} — назначить менеджера
+
+GET /competitions — список соревнований
+
+Менеджер (/api/manager)
+GET /my-directions — направления менеджера
+
+GET /competitions — соревнования его направления
+
+POST /competitions/{comp_id}/assign-expert/{expert_id} — назначить эксперта
+
+Эксперт (/api/expert)
+GET /my-competitions — соревнования, где эксперт назначен
+
+GET /tasks — задания для оценки
+
+
+Структура проекта
+
+student-league/
+├── app/
+│   ├── main.py              # FastAPI приложение
+│   ├── models.py            # SQLAlchemy модели
+│   ├── database.py          # Подключение к БД
+│   ├── auth.py              # JWT и хеширование
+│   ├── routers/             # Эндпоинты по ролям
+│   └── templates/           # HTML-шаблоны
+├── static/                  # CSS/JS (опционально)
+├── requirements.txt
+├── init_db.py               # Создание таблиц и admin
+├── start_server.py          # Запуск сервера
+└── scripts/                 # Тестовые скрипты
+
